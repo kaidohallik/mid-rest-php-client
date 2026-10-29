@@ -15,6 +15,21 @@
 Run `composer install` to get all the dependencies.
 Then you can run tests `php vendor/phpunit/phpunit/phpunit`
 
+### Running tests in Docker
+
+Run this in the project folder (use `8.5-cli` instead of `8.4-cli` to test with PHP 8.5).
+The command works in bash (Linux, macOS) and PowerShell.
+
+```bash
+docker run --rm -v "${PWD}:/app" -w /app -e COMPOSER_ALLOW_SUPERUSER=1 php:8.4-cli bash -c '
+  apt-get update -qq \
+  && apt-get install -y -qq libgmp-dev libicu-dev unzip > /dev/null \
+  && docker-php-ext-install gmp intl > /dev/null \
+  && curl -sS https://getcomposer.org/installer | php -- --quiet --install-dir=/usr/local/bin --filename=composer \
+  && composer install --no-interaction --no-progress \
+  && vendor/bin/phpunit'
+```
+
 ## Demo application 
 
 There is a [demo application](https://github.com/SK-EID/mid-rest-php-demo) that you can run locally. 
